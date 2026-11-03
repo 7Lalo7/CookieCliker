@@ -1,28 +1,39 @@
 <script>
-  // Contraseña
+(function() {
   const PASSWORD = "lalo.2012";
-  const STORAGE_KEY = "cookie_access_ok";
+  const KEY = "cc_access";
 
-  // Si ya tiene acceso guardado, no hace nada
-  if (localStorage.getItem(STORAGE_KEY) === "true") {
-    // Ya tiene acceso, deja cargar la página normal
-  } else {
-    // Pide la contraseña
-    const pass = prompt("Ingresa la contraseña para acceder:");
-    
-    if (pass === PASSWORD) {
-      localStorage.setItem(STORAGE_KEY, "true");
-      alert("Acceso concedido. Ya no te pedirá la contraseña.");
-      // Recarga para que cargue limpio
-      location.reload();
-    } else {
-      alert("Contraseña incorrecta");
-      // Bloquea la página
-      document.body.innerHTML = "<h1 style='text-align:center; margin-top:100px; font-family:Arial;'>Acceso denegado</h1>";
-      throw new Error("Acceso denegado");
-    }
+  // Si ya tiene acceso guardado, deja pasar
+  if (localStorage.getItem(KEY) === "ok") {
+    return;
   }
+
+  // Oculta todo el contenido inmediatamente
+  document.documentElement.style.visibility = "hidden";
+
+  const pass = prompt("Ingresa la contraseña:");
+
+  if (pass === PASSWORD) {
+    localStorage.setItem(KEY, "ok");
+    document.documentElement.style.visibility = "visible";
+    location.reload(); // recarga limpio
+  } else {
+    // Bloqueo total
+    document.documentElement.innerHTML = `
+      <html>
+        <head><title>Acceso denegado</title></head>
+        <body style="background:#111; color:white; font-family:Arial; display:flex; justify-content:center; align-items:center; height:100vh; margin:0;">
+          <div style="text-align:center;">
+            <h1>Acceso denegado</h1>
+            <p>Contraseña incorrecta</p>
+          </div>
+        </body>
+      </html>
+    `;
+  }
+})();
 </script>
+
 <html>
   <head>
     <meta name="viewport" content="width=900, initial-scale=1">
